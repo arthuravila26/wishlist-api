@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
-from app.models.user import Base
+from sqlalchemy.ext.declarative import declarative_base
 
 DATABASE_URI = os.getenv('DB_URI')
 
 engine = create_engine(DATABASE_URI)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base.metadata.create_all(bind=engine)
+Base = declarative_base()
 
 try:
     connection = engine.connect()
