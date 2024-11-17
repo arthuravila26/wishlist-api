@@ -1,1 +1,1 @@
-# wishlist-api
+# whishlist-api
