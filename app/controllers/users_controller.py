@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.utils.exceptions import UserNotFound, EmailAlreadyExists
 from app.utils.logger import logger
+import requests
 
 def create_user(session: Session, request):
     check_email = get_user_by_email(session, request.email)
@@ -51,3 +52,11 @@ def delete_user(session: Session, user_id: int):
     except:
         logger.error(f'User {user.name} Not found.')
         raise UserNotFound()
+
+def add_item_to_user_wishlist(product_id: int, user_id):
+    pass
+
+def send_request_to_get_product(product_id):
+    response = requests.get(f"http://localhost:8000/api/products/{product_id}")
+    return response.json()
+
