@@ -1,6 +1,8 @@
+from http import HTTPStatus
+
 from sqlalchemy.orm import Session
 from app.models.user import User
-from app.utils.exceptions import UserNotFound, EmailAlreadyExists
+from app.utils.exceptions import UserNotFound, EmailAlreadyExists, ItemDuplicatedInWishList, ProductNotFound
 from app.utils.logger import logger
 import requests
 
@@ -20,7 +22,12 @@ def get_users(session: Session):
     return session.query(User).all()
 
 def get_user_by_id(session: Session, user_id: int):
-    return session.query(User).filter(User.id == user_id).first()
+    try:
+        user = session.query(User).filter(User.id == user_id).first()
+        return user
+    except:
+        logger.error(f'User {user_id} Not found.')
+        raise UserNotFound()
 
 def get_user_by_email(session: Session, email: str):
     return session.query(User).filter(User.email == email).first()
@@ -50,13 +57,22 @@ def delete_user(session: Session, user_id: int):
         logger.info(f'User {user.name} Deleted.')
         return {"message": "User deleted successfully"}
     except:
-        logger.error(f'User {user.name} Not found.')
+        logger.error(f'User id {user_id} Not found.')
         raise UserNotFound()
 
-def add_item_to_user_wishlist(product_id: int, user_id):
-    pass
+def add_item_to_user_wishlist(session: Session, user_id: int, product_id: int):
+    user = get_user_by_id(session, user_id)
+
+    if any(item.get("id") == product_id for item in user.wishlist):
+        raise ItemDuplicatedInWishList()
+
+    product_data = send_request_to_get_product(product_id)
+
+    user.wishlist.append(product_data)
+    session.commit()
 
 def send_request_to_get_product(product_id):
     response = requests.get(f"http://localhost:8000/api/products/{product_id}")
+    if response.status_code != 200:
+        raise ProductNotFound()
     return response.json()
-

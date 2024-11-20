@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from http.client import HTTPException
 
 from fastapi import APIRouter
 
@@ -49,8 +50,11 @@ def get_products_list():
     return products
 
 @router.get("/{product_id}")
-def get_product_by_id(product_id):
-    for product in products:
-        if product.get("id") == product_id:
-            return product
-    return {"Product not found"}
+def get_product_by_id(product_id: int):
+    try:
+        products_list = products["body"]["products"]
+        for product in products_list:
+            if product.get("id") == product_id:
+                return product
+    except Exception:
+        raise HTTPStatus.NOT_FOUND
