@@ -5,22 +5,28 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-#    volumes:
-#      - dbdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-#  api:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    image: wishlist-api
-#    volumes:
-#      - .:/code
-#    depends_on:
-#      - db
-#    environment:
-#      - DBNAME=postgres
-#      - DBUSER=postgres=postgres
-#      - DBPASSWORD=postgres
-#      - DBHOST=db
-#      - DBPORT=5432
+    networks:
+      - wishlist_network
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wishlist-api
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    environment:
+      - DB_URI=postgresql://postgres:postgres@db:5432/postgres
+      - JWT_SECRET=jwt_secret_test_insecure
+      - JWT_ALGORITHM=HS256
+    ports:
+      - "8000:8000"
+    networks:
+      - wishlist_network
+
+networks:
+  wishlist_network:
+    driver: bridge

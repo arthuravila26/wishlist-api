@@ -1,9 +1,8 @@
 from http import HTTPStatus
-from http.client import HTTPException
 
 from fastapi import APIRouter
 
-router = APIRouter(prefix='/api/products', tags=['products'])
+router = APIRouter(prefix="/api/products", tags=["products"])
 
 products = {
     "status_code": 200,
@@ -15,7 +14,7 @@ products = {
                 "image": "image.jpg",
                 "brand": "brand1",
                 "title": "tenis",
-                "reviewScore": 5.0
+                "reviewScore": 5.0,
             },
             {
                 "id": 2,
@@ -23,7 +22,7 @@ products = {
                 "image": "image.jpg",
                 "brand": "brand2",
                 "title": "camisa",
-                "reviewScore": 4.0
+                "reviewScore": 4.0,
             },
             {
                 "id": 3,
@@ -31,7 +30,7 @@ products = {
                 "image": "image.jpg",
                 "brand": "brand4",
                 "title": "bermuda",
-                "reviewScore": 3.9
+                "reviewScore": 3.9,
             },
             {
                 "id": 4,
@@ -39,15 +38,17 @@ products = {
                 "image": "image.jpg",
                 "brand": "brand4",
                 "title": "bone",
-                "reviewScore": 2.4
-            }
+                "reviewScore": 2.4,
+            },
         ]
-    }
+    },
 }
+
 
 @router.get("/", status_code=HTTPStatus.FOUND)
 def get_products_list():
     return products
+
 
 @router.get("/{product_id}")
 def get_product_by_id(product_id: int):
