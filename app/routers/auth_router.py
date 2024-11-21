@@ -9,6 +9,7 @@ from app.schemas.token_schema import UserLogin
 
 router = APIRouter(prefix="/api", tags=["users"])
 
+
 @router.post("/token")
 def login_for_access_token(request: UserLogin, session: Session = Depends(get_db)):
     user = authenticate_user(request.email, request.password, session)

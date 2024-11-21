@@ -33,12 +33,10 @@ def get_users(session: Session):
 
 
 def get_user_by_id(session: Session, user_id: int):
-    try:
-        user = session.query(User).filter(User.id == user_id).first()
-        return user
-    except:
-        logger.error(f"User {user_id} Not found.")
+    user = session.query(User).filter(User.id == user_id).first()
+    if user is None:
         raise UserNotFound()
+    return user
 
 
 def get_user_by_email(session: Session, email: str):
@@ -51,18 +49,15 @@ def update_user(session: Session, user_id: int, data):
     if check_email and check_email.id != user_id:
         logger.error(f"Email {data.email} already registered.")
         raise EmailAlreadyExists()
-    try:
-        user = get_user_by_id(session, user_id)
-        user.name = data.name
-        user.email = data.email
-        user.password = hash_password(data.password)
-        session.commit()
-        session.refresh(user)
-        logger.info(f"User {data.name} Updated.")
-        return user
-    except:
-        logger.error(f"User {data.name} Not found.")
-        raise UserNotFound()
+
+    user = get_user_by_id(session, user_id)
+    user.name = data.name
+    user.email = data.email
+    user.password = hash_password(data.password)
+    session.commit()
+    session.refresh(user)
+    logger.info(f"User {data.name} Updated.")
+    return user
 
 
 def delete_user(session: Session, user_id: int):

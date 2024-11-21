@@ -37,5 +37,7 @@ A documentação pode ser acessada via `localhost:8000/docs`. Importante frizar 
 A Wishlist API conta com sistema de autenticação e autorização com uso de senha e JWT Token.
 Ao inciar, é preciso criar um usuário com nome, email e senha. A partir desse dado, é possivel gerar um JWT Token com o email e senha pelo endpoint `/api/token`. Com esse token, será possivel acessar os outros endpoints da aplicação. Este token tem duração 30 minutos.
 
-# TODO
-Ainda é necessario criar testes para a aplicação.
+# Testes Unitarios
+
+Foram criados testes unitarios para garantir a qualidade das operações do CRUD de usuario e tambem da logica da wishlist.
+Para executar os testes, é preciso apenar rodar o comando `python -m unittest`
