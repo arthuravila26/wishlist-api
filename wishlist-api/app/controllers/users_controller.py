@@ -1,3 +1,5 @@
+import os
+
 import requests
 from sqlalchemy.orm import Session
 
@@ -10,7 +12,6 @@ from app.utils.exceptions import (
     UserNotFound,
 )
 from app.utils.logger import logger
-import os
 
 
 def create_user(session: Session, create_user):
@@ -75,7 +76,9 @@ def delete_user(session: Session, user_id: int):
 
 def add_item_to_user_wishlist(session: Session, user_id: int, product_id: int):
     user = get_user_by_id(session, user_id)
-    existing_item = next((item for item in user.wishlist if item.get('ID') == product_id), None)
+    existing_item = next(
+        (item for item in user.wishlist if item.get("ID") == product_id), None
+    )
 
     if existing_item:
         raise ItemDuplicatedInWishList()
@@ -99,7 +102,9 @@ def delete_item_from_user_wishlist(session: Session, user_id: int, product_id: i
 
 
 def send_request_to_get_product(product_id):
-    response = requests.get(f"http://{os.getenv("PRODUCT_API")}:8080/product/{product_id}")
+    response = requests.get(
+        f"http://{os.getenv("PRODUCT_API")}:8080/product/{product_id}"
+    )
     if response.status_code != 200:
         raise ProductNotFound()
     return response.json()

@@ -19,7 +19,14 @@ class TestWishlistFunctions(TestCase):
     ):
         user_id = 1
         product_id = 10
-        product_data = {"id": product_id, "name": "Product 10", "price": 100.99, "image": "image.jpg", "brand": "brand1", "reviewScore": 4.5}
+        product_data = {
+            "id": product_id,
+            "name": "Product 10",
+            "price": 100.99,
+            "image": "image.jpg",
+            "brand": "brand1",
+            "reviewScore": 4.5,
+        }
 
         mock_user = MagicMock(spec=User)
         mock_user.wishlist = []
@@ -48,7 +55,7 @@ class TestWishlistFunctions(TestCase):
             "image": "image",
             "brand": "test brand2",
             "title": "test title2",
-            "reviewScore": 4.9
+            "reviewScore": 4.9,
         }
 
         mock_user = MagicMock()
