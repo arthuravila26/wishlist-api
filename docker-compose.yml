@@ -9,21 +9,37 @@ services:
       - "5432:5432"
     networks:
       - wishlist_network
-  api:
+  wishlist-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: wishlist-api/Dockerfile
     image: wishlist-api
-    volumes:
-      - .:/code
     depends_on:
       - db
     environment:
       - DB_URI=postgresql://postgres:postgres@db:5432/postgres
       - JWT_SECRET=jwt_secret_test_insecure
       - JWT_ALGORITHM=HS256
+      - PRODUCT_API=products-api
     ports:
       - "8000:8000"
+    networks:
+      - wishlist_network
+  products-api:
+    build:
+      context: .
+      dockerfile: products-api/Dockerfile
+    image: products-api
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=postgres
+      - DB_PORT=5432
+    ports:
+      - "8080:8080"
     networks:
       - wishlist_network
 
